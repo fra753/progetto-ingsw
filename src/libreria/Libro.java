@@ -1,6 +1,6 @@
 package libreria;
 
-public class Libro {
+public class Libro implements Component{
 
     private String titolo;
     private String autore;
@@ -61,4 +61,23 @@ public class Libro {
         valutazione = nuova_valutazione;
     }
 
+    @Override
+    public void operation() {
+        System.out.println("libro " + titolo + " di " + autore);
+    }
+
+    @Override
+    public void add(Component c) {
+        throw new UnsupportedOperationException("Un libro non può contenere altri libri");
+    }
+
+    @Override
+    public void remove(Component c) {
+        throw new UnsupportedOperationException("Un libro non può contenere altri libri");
+    }
+
+    @Override
+    public Component get_figlio(int i) {
+        throw new UnsupportedOperationException("Un libro non ha figli");
+    }
 }
