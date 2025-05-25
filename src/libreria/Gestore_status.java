@@ -10,12 +10,11 @@ public abstract class Gestore_status {
     public void setSuccessivo(Gestore_status successivo) {
         this.successivo = successivo;
     }
-    public List<Libro> gestisci(Stato_della_lettura status, List<Libro> lista) {
+    public void gestisci(Stato_della_lettura status, List<Libro> lista, Iterator<Libro> it) {
         if (successivo != null) {
-            return successivo.gestisci(status,lista);
+            successivo.gestisci(status,lista,it);
         } else {
             System.out.println("Nessun gestore disponibile per: " + status);
-            return new ArrayList<>();
         }
     }
 }

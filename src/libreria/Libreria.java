@@ -114,12 +114,13 @@ public class Libreria{
     public List<Libro> ricerca_per_status(Stato_della_lettura status) {
         List<Libro> selezionati = new ArrayList<>();
         Iterator<Libro> it = new Libreria_iterator(libri);
-        while (it.hasNext()) {
-            Libro l = it.next();
-            if (l.getAutore().equalsIgnoreCase(titolo)) {
-                selezionati.add(l);
-            }
-        }
+
+        Gestore_status g1 = new Gestore_letti();
+        Gestore_in_lettura g2 = new Gestore_in_lettura();
+        Gestore_da_leggere g3 = new Gestore_da_leggere();
+        g1.setSuccessivo(g2);
+        g2.setSuccessivo(g3);
+        g1.gestisci(status,selezionati,it);
         return selezionati;
     }
 

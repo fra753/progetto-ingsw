@@ -4,12 +4,16 @@ import java.util.List;
 
 public class Gestore_letti extends Gestore_status{
 
-    public List<Libro> gestisci (Stato_della_lettura status, List<Libro> lista) {
-        if (Stato_della_lettura.LETTO.equals(status)) {
-            System.out.println("Gestore_letti gestisce");
-
-        } else {
-            return super.gestisci(status,lista);
+    public void gestisci(Stato_della_lettura status, List<Libro> lista, Iterator<Libro> it) {
+        if (status == Stato_della_lettura.LETTO) {
+            while (it.hasNext()) {
+                Libro l = it.next();
+                if (l.getStatus() == Stato_della_lettura.LETTO) {
+                    lista.add(l);
+                }
+            }
+        } else if (successivo != null) {
+            successivo.gestisci(status, lista, it);
         }
     }
 }
