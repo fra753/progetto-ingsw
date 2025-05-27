@@ -8,6 +8,18 @@ public class Collezioni implements Component{
     private String nome;
     private List<Component> figli = new ArrayList<Component>();
 
+    public String getNome() {
+        return nome;
+    }
+
+    public int get_size(){
+        return figli.size();
+    }
+
+    public List<Component> prendi_componenti() {
+        return figli;
+    }
+
     public Collezioni(String nome) {
         this.nome = nome;
     }

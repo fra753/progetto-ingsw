@@ -4,13 +4,13 @@ public class Libro implements Component{
 
     private String titolo;
     private String autore;
-    private int codice_ISBN;
+    private String codice_ISBN;
     private String genere;
     private int valutazione;
     private Stato_della_lettura status;
     private boolean letto_almeno_una_volta;
 
-    public Libro(String titolo, String autore, int codice_ISBN, String genere, int valutazione, Stato_della_lettura stato) {
+    public Libro(String titolo, String autore, String codice_ISBN, String genere, int valutazione, Stato_della_lettura stato, boolean selected) {
         this.titolo = titolo;
         this.autore = autore;
         this.codice_ISBN = codice_ISBN;
@@ -27,7 +27,7 @@ public class Libro implements Component{
     public String getAutore() {
         return autore;
     }
-    public int getCodice_ISBN() {
+    public String getCodice_ISBN() {
         return codice_ISBN;
     }
     public String getGenere() {
