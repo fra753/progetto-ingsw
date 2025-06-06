@@ -1,36 +1,41 @@
 package libreria;
 
-public class Libro implements Component{
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class Libro  {
     private String titolo;
     private String autore;
     private String codice_ISBN;
-    private String genere;
+    private Generi genere;
     private int valutazione;
     private Stato_della_lettura status;
-    private boolean letto_almeno_una_volta;
 
-    public Libro(String titolo, String autore, String codice_ISBN, String genere, int valutazione, Stato_della_lettura stato, boolean selected) {
+    public Libro(@JsonProperty("titolo") String titolo,
+                 @JsonProperty("autore") String autore,
+                 @JsonProperty("codice_ISBN") String codiceISBN,
+                 @JsonProperty("genere") Generi genere,
+                 @JsonProperty("valutazione") int valutazione,
+                 @JsonProperty("status") Stato_della_lettura status) {
         this.titolo = titolo;
         this.autore = autore;
-        this.codice_ISBN = codice_ISBN;
+        this.codice_ISBN = codiceISBN;
         this.genere = genere;
         this.valutazione = valutazione;
-        status = stato;
-        letto_almeno_una_volta = false;
+        this.status = status;
     }
+    // per caricare libri da file json
+    public Libro(){}
 
     public String getTitolo() {
         return titolo;
     }
-
     public String getAutore() {
         return autore;
     }
     public String getCodice_ISBN() {
         return codice_ISBN;
     }
-    public String getGenere() {
+    public Generi getGenere() {
         return genere;
     }
     public int getValutazione() {
@@ -39,45 +44,23 @@ public class Libro implements Component{
     public Stato_della_lettura getStatus() {
         return status;
     }
+
     public void modifica_status(Stato_della_lettura nuovo_status) {
         switch (nuovo_status) {
             case LETTO:
                 status = Stato_della_lettura.LETTO;
-                letto_almeno_una_volta = true;
                 System.out.println(titolo + " è stato letto");
                 break;
             case IN_LETTURA:
                 status = Stato_della_lettura.IN_LETTURA;
                 System.out.println(titolo + " è in lettura");
                 break;
-
         }
     }
-    public void modifica_valutazione(int nuova_valutazione) {
-        if (! letto_almeno_una_volta) {
-            throw new Libro_non_letto_eccezzione("non si può dare una valutazione");
 
-        }
+    public void modifica_valutazione(int nuova_valutazione) {
         valutazione = nuova_valutazione;
     }
 
-    @Override
-    public void operation() {
-        System.out.println("libro " + titolo + " di " + autore);
-    }
 
-    @Override
-    public void add(Component c) {
-        throw new UnsupportedOperationException("Un libro non può contenere altri libri");
-    }
-
-    @Override
-    public void remove(Component c) {
-        throw new UnsupportedOperationException("Un libro non può contenere altri libri");
-    }
-
-    @Override
-    public Component get_figlio(int i) {
-        throw new UnsupportedOperationException("Un libro non ha figli");
-    }
 }

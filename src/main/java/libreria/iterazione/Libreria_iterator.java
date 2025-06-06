@@ -1,4 +1,6 @@
-package libreria;
+package libreria.iterazione;
+
+import libreria.Libro;
 
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class Libreria_iterator implements Iterator<Libro> {
     private int rimosso = -1;
 
     public Libreria_iterator(List<Libro> lista) {
+
         this.lista = lista;
     }
 

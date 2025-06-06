@@ -1,4 +1,6 @@
-package libreria;
+package libreria.ordinamenti;
+
+import libreria.Libro;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,6 +1,9 @@
-package libreria;
+package libreria.gestori;
 
-import java.util.ArrayList;
+import libreria.iterazione.Iterator;
+import libreria.Libro;
+import libreria.Stato_della_lettura;
+
 import java.util.List;
 
 public abstract class Gestore_status {

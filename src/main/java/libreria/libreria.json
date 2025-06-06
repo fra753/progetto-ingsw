@@ -1,0 +1,29 @@
+[ {
+  "titolo" : "Zanna bianca",
+  "autore" : "London",
+  "codice_ISBN" : "8693",
+  "genere" : "AZIONE",
+  "valutazione" : 5,
+  "status" : "LETTO"
+}, {
+  "titolo" : "Il richiamo della foresta",
+  "autore" : "London",
+  "codice_ISBN" : "7836429",
+  "genere" : "AZIONE",
+  "valutazione" : 4,
+  "status" : "LETTO"
+}, {
+  "titolo" : "The expanse",
+  "autore" : "Corey",
+  "codice_ISBN" : "8583748",
+  "genere" : "AZIONE",
+  "valutazione" : -1,
+  "status" : "DA_LEGGERE"
+}, {
+  "titolo" : "Cuore",
+  "autore" : "De Amicis",
+  "codice_ISBN" : "093839",
+  "genere" : "NOVELLA",
+  "valutazione" : 4,
+  "status" : "LETTO"
+} ]

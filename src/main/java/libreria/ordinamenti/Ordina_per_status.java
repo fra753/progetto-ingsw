@@ -1,4 +1,7 @@
-package libreria;
+package libreria.ordinamenti;
+
+import libreria.Libro;
+import libreria.Stato_della_lettura;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,7 +17,6 @@ public class Ordina_per_status implements Ordinamento {
         };
         lista.sort(compara_status);
     }
-
 
     private int priorità(Stato_della_lettura status){
         switch(status){

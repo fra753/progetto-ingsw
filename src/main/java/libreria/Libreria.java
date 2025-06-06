@@ -1,21 +1,28 @@
 package libreria;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import libreria.gestori.Gestore_da_leggere;
+import libreria.gestori.Gestore_in_lettura;
+import libreria.gestori.Gestore_letti;
+import libreria.gestori.Gestore_status;
+import libreria.iterazione.Aggregato;
+import libreria.iterazione.Iterator;
+import libreria.iterazione.Libreria_iterator;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Libreria{
+public class Libreria extends Subject implements Aggregato {
 
     private static Libreria instanza;
-    private List<Libro> libri = new ArrayList<>();
-
-    private Libreria() {}
+    private List<Libro> libri ;
+    private Libreria() {};
 
     public static Libreria getInstance() {
         if (instanza == null) {
@@ -23,151 +30,45 @@ public class Libreria{
         }
         return instanza;
     }
+
     public void aggiungiLibro(Libro libro) {
         libri.add(libro);
         System.out.println("Il libro "+ libro+  " è stato aggiunto");
+        notificaObservers();
     }
+
     public List<Libro> getLibri() {
         return libri;
     }
 
-
-
     public void modifica_info(String isbn,int nuova_valutazione, Stato_della_lettura nuovo_status) {
-        for (Libro l : libri) {
+        Iterator<Libro> it = crea_iterator();
+        while (it.hasNext()) {
+            Libro l = it.next();
             if (l.getCodice_ISBN().equals(isbn)) {
                 l.modifica_status(nuovo_status);
                 if (l.getStatus().equals(Stato_della_lettura.LETTO))
                     l.modifica_valutazione(nuova_valutazione);
             }
         }
+        notificaObservers();
     }
 
     public void rimuovi_libro(String isbn) {
-        Iterator<Libro> it = new Libreria_iterator(libri);
+        Iterator<Libro> it = crea_iterator();
         while (it.hasNext()) {
             Libro l = it.next();
             if (l.getCodice_ISBN().equals(isbn)) {
                 it.remove();
+                notificaObservers();
+                return;
             }
         }
     }
 
-    private Component radice;
-
-    public Component getRadice() {
-        return radice;
-    }
-
-    public Libreria (String nome) {
-        this.radice = new Collezioni(nome);
-    }
-
-    public void add(Component c) {
-        if (radice == null)
-            radice = new Collezioni("Libreria");
-        radice.add(c);
-    }
-
-    public void mostra_collezione(){
-        radice.operation();
-    }
-
-    public Component get_collezione(String nome) {
-        return cerca_collezione(radice,nome);
-    }
-
-    private Component cerca_collezione(Component componente, String nome) {
-        if (componente instanceof Collezioni) {
-            Collezioni collezione = (Collezioni) componente;
-            if (collezione.getNome().equalsIgnoreCase(nome)) {
-                return collezione;
-            }
-            for (int i = 0; i < collezione.get_size(); i++) {
-                Component figlio = collezione.get_figlio(i);
-                Component trovata = cerca_collezione(figlio, nome);
-                if (trovata != null) {
-                    return trovata;
-                }
-            }
-        }
-        return null;
-    }
-
-    private Map<String, List<Libro>> libriInAttesa = new HashMap<>();
-
-    public void aggiungiLibroInAttesa(String nomeCollezione, Libro libro) {
-        List<Libro> lista = libriInAttesa.get(nomeCollezione);
-        if (lista == null) {
-            lista = new ArrayList<>();
-            libriInAttesa.put(nomeCollezione, lista);
-        }
-        lista.add(libro);
-
-    }
-
-    public List<Libro> getLibriInAttesa(String nomeCollezione) {
-        return libriInAttesa.get(nomeCollezione);
-    }
-
-    public void rimuoviLibriInAttesa(String nomeCollezione) {
-        libriInAttesa.remove(nomeCollezione);
-    }
-
-    public void mostra_libreria() {
-        System.out.printf("%-30s %-20s %-15s %-15s\n",
-            "Titolo", "Autore", "Genere", "Status");
-        System.out.println();
-        for (Libro libro : libri) {
-            System.out.printf("%-30s %-20s %-15s %-15s\n",
-            libro.getTitolo(),
-            libro.getAutore(),
-            libro.getGenere(),
-            libro.getStatus());
-        }
-    }
-
-    public List<Libro> filtra_genere(String genere) {
+    public List<Libro> filtra_status(Stato_della_lettura status) {
         List<Libro> selezionati = new ArrayList<>();
-        Iterator<Libro> it = new Libreria_iterator(libri);
-
-        while (it.hasNext()) {
-            Libro l = it.next();
-            if (l.getGenere().equalsIgnoreCase(genere)) {
-                selezionati.add(l);
-            }
-        }
-        return selezionati;
-    }
-
-    public List<Libro> ricerca_per_autore(String autore) {
-        List<Libro> selezionati = new ArrayList<>();
-        Iterator<Libro> it = new Libreria_iterator(libri);
-
-        while (it.hasNext()) {
-            Libro l = it.next();
-            if (l.getAutore().equalsIgnoreCase(autore)) {
-                selezionati.add(l);
-            }
-        }
-        return selezionati;
-    }
-
-    public List<Libro> ricerca_per_titolo(String titolo) {
-        List<Libro> selezionati = new ArrayList<>();
-        Iterator<Libro> it = new Libreria_iterator(libri);
-        while (it.hasNext()) {
-            Libro l = it.next();
-            if (l.getAutore().equalsIgnoreCase(titolo)) {
-                selezionati.add(l);
-            }
-        }
-        return selezionati;
-    }
-
-    public List<Libro> ricerca_per_status(Stato_della_lettura status) {
-        List<Libro> selezionati = new ArrayList<>();
-        Iterator<Libro> it = new Libreria_iterator(libri);
+        Iterator<Libro> it = crea_iterator();
 
         Gestore_status g1 = new Gestore_letti();
         Gestore_in_lettura g2 = new Gestore_in_lettura();
@@ -175,33 +76,44 @@ public class Libreria{
         g1.setSuccessivo(g2);
         g2.setSuccessivo(g3);
         g1.gestisci(status,selezionati,it);
+
         return selezionati;
     }
 
+    private static final String FILE_PATH = "src/main/java/libreria/libreria.json";
 
-    public void salva_sul_file(String percorso) throws IOException {
-        ObjectMapper mappa = new ObjectMapper();
-        Map<String, Object> dati = new HashMap<>();
-        dati.put("radice", radice);
-        dati.put("libriInAttesa", libriInAttesa);
-        mappa.writeValue(new File(percorso), libri);
+    public void salvaSuFile() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(libri);
+        Files.write(Paths.get(FILE_PATH), json.getBytes(StandardCharsets.UTF_8));
     }
 
-    public void carica_dal_file(String percorso) throws IOException {
-        ObjectMapper mappa = new ObjectMapper();
-        //mappa.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL); // serve per i tipi astratti
-        Map<String, Object> dati = mappa.readValue(
-                new File(percorso),
-                new TypeReference<Map<String, Object>>() {}
-        );
-        radice = mappa.convertValue(dati.get("radice"), Collezioni.class);
+    public void caricaDaFile()  {
+        try {
+            if (!Files.exists(Paths.get(FILE_PATH))) {
+                System.out.println("Il file non esiste, creando una nuova lista di libri.");
+                libri = new ArrayList<>();
+                return;
+            }
+            System.out.println("Sto cercando di caricare il file JSON: " + FILE_PATH);
 
-        TypeReference<Map<String, List<Libro>>> tipoMappa = new TypeReference<>() {};
-        libriInAttesa = mappa.convertValue(dati.get("libriInAttesa"), tipoMappa);
+            byte[] jsonData = Files.readAllBytes(Paths.get(FILE_PATH));
+            System.out.println("Contenuto del file JSON:");
+            System.out.println(new String(jsonData, StandardCharsets.UTF_8));
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
+            CollectionType listType = mapper.getTypeFactory().constructCollectionType(ArrayList.class, Libro.class);
+            libri = mapper.readValue(jsonData, listType);
+        } catch (IOException e) {
+            System.err.println("Errore durante la lettura del file JSON: " + e.getMessage());
+            libri = new ArrayList<>();
+        }
     }
 
 
-
-
-
+    @Override
+    public Iterator<Libro> crea_iterator() {
+        return new Libreria_iterator(libri);
+    }
 }
