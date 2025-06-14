@@ -1,8 +1,13 @@
-package libreria;
+package libreria.gui;
 
+import libreria.risorse.Generi;
+import libreria.risorse.Libreria;
+import libreria.risorse.Libro;
+import libreria.risorse.Stato_della_lettura;
 import libreria.command.*;
 import libreria.iterazione.Iterator;
 import libreria.iterazione.Libreria_iterator;
+import libreria.observer.Observer;
 import libreria.ordinamenti.*;
 
 import javax.swing.*;
@@ -10,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Applicazione extends JFrame implements Observer{
+public class Applicazione extends JFrame implements Observer {
 
     private Libreria libreria = Libreria.getInstance();
 

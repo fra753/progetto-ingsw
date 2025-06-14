@@ -1,4 +1,4 @@
-package libreria;
+package libreria.observer;
 
 public interface Observer<T> {
 

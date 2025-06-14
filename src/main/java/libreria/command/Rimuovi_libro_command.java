@@ -1,9 +1,9 @@
 package libreria.command;
 
 import libreria.iterazione.Iterator;
-import libreria.Libreria;
+import libreria.risorse.Libreria;
 import libreria.iterazione.Libreria_iterator;
-import libreria.Libro;
+import libreria.risorse.Libro;
 
 public class Rimuovi_libro_command implements Command {
     private Libreria libreria;

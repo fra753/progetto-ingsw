@@ -1,4 +1,4 @@
-package libreria;
+package libreria.observer;
 
 import java.util.ArrayList;
 import java.util.List;

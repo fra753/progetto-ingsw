@@ -1,8 +1,8 @@
 package libreria.gestori;
 
 import libreria.iterazione.Iterator;
-import libreria.Libro;
-import libreria.Stato_della_lettura;
+import libreria.risorse.Libro;
+import libreria.risorse.Stato_della_lettura;
 
 import java.util.List;
 

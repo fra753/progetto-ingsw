@@ -1,4 +1,4 @@
-package libreria;
+package libreria.risorse;
 
 public enum Stato_della_lettura {
 

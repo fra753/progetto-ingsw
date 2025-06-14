@@ -1,7 +1,7 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import libreria.Libro;
-import libreria.Stato_della_lettura;
-import libreria.Generi;
+import libreria.risorse.Libro;
+import libreria.risorse.Stato_della_lettura;
+import libreria.risorse.Generi;
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

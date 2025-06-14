@@ -1,4 +1,4 @@
-package libreria;
+package libreria.risorse;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

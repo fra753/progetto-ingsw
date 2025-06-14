@@ -1,4 +1,4 @@
-package libreria;
+package libreria.gui;
 
 import javax.swing.*;
 

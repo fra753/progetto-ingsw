@@ -1,8 +1,10 @@
 package libreria.command;
 
-import libreria.*;
 import libreria.iterazione.Iterator;
 import libreria.iterazione.Libreria_iterator;
+import libreria.risorse.Libreria;
+import libreria.risorse.Libro;
+import libreria.risorse.Stato_della_lettura;
 
 public class Modifica_libro_command implements Command {
 

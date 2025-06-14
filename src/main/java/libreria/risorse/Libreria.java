@@ -1,4 +1,4 @@
-package libreria;
+package libreria.risorse;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +10,7 @@ import libreria.gestori.Gestore_status;
 import libreria.iterazione.Aggregato;
 import libreria.iterazione.Iterator;
 import libreria.iterazione.Libreria_iterator;
+import libreria.observer.Subject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -93,7 +94,7 @@ public class Libreria extends Subject implements Aggregato {
     }
 
 
-    private static final String FILE_PATH = "src/main/java/libreria/libreria.json";
+    private static final String FILE_PATH = "src/main/java/libreria/risorse/libreria.json";
 
     public void salvaSuFile() throws Exception {
         ObjectMapper mapper = new ObjectMapper();

@@ -1,7 +1,7 @@
 package libreria.command;
 
-import libreria.Libreria;
-import libreria.Libro;
+import libreria.risorse.Libreria;
+import libreria.risorse.Libro;
 
 public class Aggiunta_libro_command  implements Command {
 

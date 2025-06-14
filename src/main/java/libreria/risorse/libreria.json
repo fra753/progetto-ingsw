@@ -26,4 +26,11 @@
   "genere" : "NOVELLA",
   "valutazione" : 4,
   "status" : "LETTO"
+}, {
+  "titolo" : "Il giro del mondo in 80 giorni",
+  "autore" : "Verne",
+  "codice_ISBN" : "10290",
+  "genere" : "AVVENTURA",
+  "valutazione" : 4,
+  "status" : "LETTO"
 } ]

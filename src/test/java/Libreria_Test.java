@@ -1,9 +1,9 @@
-import libreria.Generi;
-import libreria.Stato_della_lettura;
+import libreria.risorse.Generi;
+import libreria.risorse.Stato_della_lettura;
 import org.junit.jupiter.api.Test;
 import java.util.List;
-import libreria.Libro;
-import libreria.Libreria;
+import libreria.risorse.Libro;
+import libreria.risorse.Libreria;
 
 import static org.junit.jupiter.api.Assertions.*;
 

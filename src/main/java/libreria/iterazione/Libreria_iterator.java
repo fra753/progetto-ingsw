@@ -1,6 +1,6 @@
 package libreria.iterazione;
 
-import libreria.Libro;
+import libreria.risorse.Libro;
 
 import java.util.List;
 

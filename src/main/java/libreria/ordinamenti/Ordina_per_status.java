@@ -1,7 +1,7 @@
 package libreria.ordinamenti;
 
-import libreria.Libro;
-import libreria.Stato_della_lettura;
+import libreria.risorse.Libro;
+import libreria.risorse.Stato_della_lettura;
 
 import java.util.ArrayList;
 import java.util.Comparator;
