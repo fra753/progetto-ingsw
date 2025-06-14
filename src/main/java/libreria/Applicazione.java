@@ -33,7 +33,6 @@ public class Applicazione extends JFrame implements Observer{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1500, 700);
         setLayout(new BorderLayout());
-
         JPanel pannelloInput = new JPanel(new GridLayout(8, 2));
 
         campo_titolo = new JTextField();
@@ -55,16 +54,13 @@ public class Applicazione extends JFrame implements Observer{
         pannelloInput.add(box_valutazione);
         pannelloInput.add(new JLabel("Stato lettura:"));
         pannelloInput.add(box_status);
-
         add(pannelloInput, BorderLayout.NORTH);
 
         modello_lista = new DefaultListModel<>();
         lista = new JList<>(modello_lista);
         add(new JScrollPane(lista), BorderLayout.CENTER);
 
-
         JPanel pannelloBottoni = new JPanel();
-
         JButton bottone_aggiungi = new JButton("Aggiungi libro");
         JButton bottone_salva = new JButton("Salva");
         JButton bottone_carica = new JButton("Carica");
@@ -103,7 +99,6 @@ public class Applicazione extends JFrame implements Observer{
         pannelloBottoni.add(bottone_filtra_genere);
         pannelloBottoni.add(bottone_mostra_tutti);
         pannelloBottoni.add(bottone_ordina);
-
         add(pannelloBottoni, BorderLayout.SOUTH);
 
         libreria.aggiungiObserver(this);
@@ -118,7 +113,6 @@ public class Applicazione extends JFrame implements Observer{
                 JOptionPane.showMessageDialog(this, "Tutti i campi devono essere compilati");
                 return;
             }
-
             Stato_della_lettura status_selezionato = (Stato_della_lettura) box_status.getSelectedItem();
             Integer valutazione_selezionata = (Integer) box_valutazione.getSelectedItem();
             if (status_selezionato == Stato_della_lettura.LETTO && valutazione_selezionata == -1) {
@@ -145,15 +139,15 @@ public class Applicazione extends JFrame implements Observer{
         JDialog finestra = new JDialog(this, "Seleziona libro da rimuovere", true);
         finestra.setSize(400, 300);
         finestra.setLayout(new BorderLayout());
-
         DefaultListModel<String> modelloSelezione = new DefaultListModel<>();
         JList<String> listaRimozione = new JList<>(modelloSelezione);
         JScrollPane scrollPane = new JScrollPane(listaRimozione);
 
-        for (Libro libro : libri_visualizzati) {
+        Iterator<Libro> it = new Libreria_iterator(libri_visualizzati);
+        while (it.hasNext()) {
+            Libro libro = it.next();
             modelloSelezione.addElement(libro.getTitolo() + " - " + libro.getAutore() + " (" + libro.getStatus() + ")");
         }
-
         JButton conferma = new JButton("Rimuovi selezionato");
         conferma.addActionListener(e -> {
             int indice = listaRimozione.getSelectedIndex();
@@ -161,13 +155,11 @@ public class Applicazione extends JFrame implements Observer{
                 JOptionPane.showMessageDialog(finestra, "Seleziona un libro da rimuovere");
                 return;
             }
-
             Libro daRimuovere = libri_visualizzati.get(indice);
             int risposta = JOptionPane.showConfirmDialog(finestra,
                     "Sei sicuro di voler rimuovere:\n" +
                             daRimuovere.getTitolo() + " - " + daRimuovere.getAutore(),
                     "Conferma", JOptionPane.YES_NO_OPTION);
-
             if (risposta == JOptionPane.YES_OPTION) {
                 Command comando = new Rimuovi_libro_command(libreria, daRimuovere.getCodice_ISBN());
                 invoker.esegui(comando);
@@ -187,14 +179,11 @@ public class Applicazione extends JFrame implements Observer{
             return;
         }
         Libro libro = libri_visualizzati.get(indiceSelezionato);
-
         JPanel pannelloModifica = new JPanel(new GridLayout(2, 2));
-
         JComboBox<Stato_della_lettura> comboStatus = new JComboBox<>(Stato_della_lettura.values());
         comboStatus.setSelectedItem(libro.getStatus());
         JComboBox<Integer> comboValutazione = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
         comboValutazione.setSelectedItem(libro.getValutazione());
-
         pannelloModifica.add(new JLabel("Stato lettura:"));
         pannelloModifica.add(comboStatus);
         pannelloModifica.add(new JLabel("Valutazione:"));
@@ -215,26 +204,22 @@ public class Applicazione extends JFrame implements Observer{
                         (Stato_della_lettura) comboStatus.getSelectedItem()
                 );
                 invoker.esegui(comando);
-
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Errore: " + e.getMessage());
             }
         }
     }
 
-    private void cerca_per_titolo() {
-        JDialog finestra = new JDialog(this, "Cerca per Titolo", true);
+    private void cerca(String dato) {
+        JDialog finestra = new JDialog(this, "Cerca per " + dato, true);
         finestra.setSize(400, 300);
         finestra.setLayout(new BorderLayout());
-
         JPanel pannelloSuperiore = new JPanel(new BorderLayout());
         JTextField campoRicerca = new JTextField();
         JButton bottoneCerca = new JButton("Cerca");
-
-        pannelloSuperiore.add(new JLabel("Inserisci titolo:"), BorderLayout.WEST);
+        pannelloSuperiore.add(new JLabel("Inserisci " + dato + " :"), BorderLayout.WEST);
         pannelloSuperiore.add(campoRicerca, BorderLayout.CENTER);
         pannelloSuperiore.add(bottoneCerca, BorderLayout.EAST);
-
         DefaultListModel<String> modelloRisultati = new DefaultListModel<>();
         JList<String> listaRisultati = new JList<>(modelloRisultati);
         JScrollPane scrollPane = new JScrollPane(listaRisultati);
@@ -242,11 +227,18 @@ public class Applicazione extends JFrame implements Observer{
         bottoneCerca.addActionListener(e -> {
             String testo = campoRicerca.getText().toLowerCase().trim();
             modelloRisultati.clear();
-
             Iterator<Libro> it = new Libreria_iterator(libri_visualizzati);
             while (it.hasNext()) {
                 Libro libro = it.next();
-                if (libro.getTitolo().toLowerCase().contains(testo)) {
+                String valore = "";
+                if (dato.equalsIgnoreCase("autore")) {
+                    valore = libro.getAutore();
+                } else if (dato.equalsIgnoreCase("titolo")) {
+                    valore = libro.getTitolo();
+                } else {
+                    valore = "";
+                }
+                if (valore.toLowerCase().contains(testo)) {
                     modelloRisultati.addElement(libro.getTitolo() + " - " + libro.getAutore() + " - " +
                             libro.getGenere() + " (" + libro.getStatus() + ")");
                 }
@@ -262,42 +254,11 @@ public class Applicazione extends JFrame implements Observer{
     }
 
     private void cerca_per_autore() {
-        JDialog finestra = new JDialog(this, "Cerca per Autore", true);
-        finestra.setSize(400, 300);
-        finestra.setLayout(new BorderLayout());
+        cerca("autore");
+    }
 
-        JPanel pannelloSuperiore = new JPanel(new BorderLayout());
-        JTextField campoRicerca = new JTextField();
-        JButton bottoneCerca = new JButton("Cerca");
-
-        pannelloSuperiore.add(new JLabel("Inserisci autore:"), BorderLayout.WEST);
-        pannelloSuperiore.add(campoRicerca, BorderLayout.CENTER);
-        pannelloSuperiore.add(bottoneCerca, BorderLayout.EAST);
-
-        DefaultListModel<String> modelloRisultati = new DefaultListModel<>();
-        JList<String> listaRisultati = new JList<>(modelloRisultati);
-        JScrollPane scrollPane = new JScrollPane(listaRisultati);
-
-        bottoneCerca.addActionListener(e -> {
-            String testo = campoRicerca.getText().toLowerCase().trim();
-            modelloRisultati.clear();
-
-            Iterator<Libro> it = new Libreria_iterator(libri_visualizzati);
-            while (it.hasNext()) {
-                Libro libro = it.next();
-                if (libro.getAutore().toLowerCase().contains(testo)) {
-                    modelloRisultati.addElement(libro.getTitolo() + " - " + libro.getAutore() + " - " +
-                            libro.getGenere() + " (" + libro.getStatus() + ")");
-                }
-            }
-            if (modelloRisultati.isEmpty()) {
-                modelloRisultati.addElement("Nessun risultato trovato.");
-            }
-        });
-        finestra.add(pannelloSuperiore, BorderLayout.NORTH);
-        finestra.add(scrollPane, BorderLayout.CENTER);
-        finestra.setLocationRelativeTo(this);
-        finestra.setVisible(true);
+    private void cerca_per_titolo() {
+        cerca("titolo");
     }
 
     private void filtra_per_status() {
@@ -307,20 +268,12 @@ public class Applicazione extends JFrame implements Observer{
             return;
         }
         List<Libro> risultati = libreria.filtra_status(statoSelezionato);
-
         modello_lista.clear();
         libri_visualizzati.clear();
-
         if (risultati.isEmpty()) {
             modello_lista.addElement("Nessun libro trovato con stato: " + statoSelezionato);
         } else {
-            Iterator<Libro> it = new Libreria_iterator(risultati);
-            while (it.hasNext()) {
-                Libro libro = it.next();
-                libri_visualizzati.add(libro);
-                modello_lista.addElement(libro.getTitolo() + " - " + libro.getAutore() + " - " +
-                        libro.getGenere() + " (" + libro.getStatus() + ")");
-            }
+            riempi(risultati);
         }
     }
 
@@ -352,65 +305,56 @@ public class Applicazione extends JFrame implements Observer{
             JOptionPane.showMessageDialog(this, "Seleziona un genere valido");
             return;
         }
-        List<Libro> risultati = new ArrayList<>();
-        Iterator<Libro> it = new Libreria_iterator(libreria.getLibri());
-        while (it.hasNext()) {
-            Libro libro = it.next();
-            if (libro.getGenere().equals(genere_selezionato)) {
-                risultati.add(libro);
-            }
-        }
-
+        List<Libro> risultati = libreria.filtra_genere(genere_selezionato);
         modello_lista.clear();
         libri_visualizzati.clear();
-
         if (risultati.isEmpty()) {
             modello_lista.addElement("Nessun libro trovato con genere: " + genere_selezionato);
         } else {
-            Iterator<Libro> it2 = new Libreria_iterator(risultati);
-            while (it2.hasNext()) {
-                Libro libro = it2.next();
-                libri_visualizzati.add(libro);
-                modello_lista.addElement(libro.getTitolo() + " - " + libro.getAutore() + " - " +
-                        libro.getGenere() + " (" + libro.getStatus() + ")");
-            }
+            riempi(risultati);
+        }
+    }
+
+    private void riempi(List<Libro> risultati) {
+        Iterator<Libro> it2 = new Libreria_iterator(risultati);
+        while (it2.hasNext()) {
+            Libro libro = it2.next();
+            libri_visualizzati.add(libro);
+            modello_lista.addElement(libro.getTitolo() + " - " + libro.getAutore() + " - " +
+                    libro.getGenere() + " (" + libro.getStatus() + ")");
         }
     }
 
 
-    private int strategia_corrente = 0;
-
     private Ordinamento[] strategie_ordinamento = new Ordinamento[]{
-        new Ordina_per_titolo(),
-        new Ordina_per_autore(),
-        new Ordina_per_codice(),
-        new Ordina_per_genere(),
-        new Ordina_per_valutazione(),
-        new Ordina_per_status()
+            new Ordina_per_titolo(),
+            new Ordina_per_autore(),
+            new Ordina_per_codice(),
+            new Ordina_per_genere(),
+            new Ordina_per_valutazione(),
+            new Ordina_per_status()
     };
 
     private String[] nomi_ordinamento = {
             "Titolo", "Autore", "Codice ISBN", "Genere", "Valutazione", "Stato"
     };
 
+
     private void ordina_lista() {
         JDialog finestra = new JDialog(this, "Seleziona criterio di ordinamento", true);
         finestra.setSize(300, 150);
         finestra.setLayout(new BorderLayout());
-
         JPanel pannelloCentro = new JPanel(new FlowLayout());
+
 
         JComboBox<String> comboOrdinamento = new JComboBox<>(nomi_ordinamento);
         pannelloCentro.add(new JLabel("Ordina per:"));
         pannelloCentro.add(comboOrdinamento);
-
         JButton bottoneConferma = new JButton("Applica");
         bottoneConferma.addActionListener(e -> {
             int indiceSelezionato = comboOrdinamento.getSelectedIndex();
             Ordinamento strategia = strategie_ordinamento[indiceSelezionato];
-
-            strategia.ordina((ArrayList<Libro>) libri_visualizzati);
-
+            strategia.ordina( (ArrayList<Libro>) libri_visualizzati);
             modello_lista.clear();
             Iterator<Libro> it = new Libreria_iterator(libri_visualizzati);
             while (it.hasNext()) {
@@ -420,7 +364,6 @@ public class Applicazione extends JFrame implements Observer{
             }
             finestra.dispose();
         });
-
         finestra.add(pannelloCentro, BorderLayout.CENTER);
         finestra.add(bottoneConferma, BorderLayout.SOUTH);
         finestra.setLocationRelativeTo(this);
@@ -467,6 +410,4 @@ public class Applicazione extends JFrame implements Observer{
         box_valutazione.setSelectedIndex(0);
         box_status.setSelectedIndex(0);
     }
-
-
 }

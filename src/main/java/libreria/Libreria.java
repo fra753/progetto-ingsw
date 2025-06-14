@@ -80,6 +80,19 @@ public class Libreria extends Subject implements Aggregato {
         return selezionati;
     }
 
+    public List<Libro> filtra_genere(Enum genere) {
+        List<Libro> risultati = new ArrayList<>();
+        Iterator<Libro> it = crea_iterator();
+        while (it.hasNext()) {
+            Libro libro = it.next();
+            if (libro.getGenere().equals(genere)) {
+                risultati.add(libro);
+            }
+        }
+        return risultati;
+    }
+
+
     private static final String FILE_PATH = "src/main/java/libreria/libreria.json";
 
     public void salvaSuFile() throws Exception {
