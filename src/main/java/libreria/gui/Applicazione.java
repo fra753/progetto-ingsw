@@ -350,13 +350,13 @@ public class Applicazione extends JFrame implements Observer {
         finestra.setSize(300, 150);
         finestra.setLayout(new BorderLayout());
         JPanel pannelloCentro = new JPanel(new FlowLayout());
-
-
         JComboBox<String> comboOrdinamento = new JComboBox<>(nomi_ordinamento);
         pannelloCentro.add(new JLabel("Ordina per:"));
         pannelloCentro.add(comboOrdinamento);
         JButton bottoneConferma = new JButton("Applica");
         bottoneConferma.addActionListener(e -> {
+            libri_visualizzati.clear();
+            libri_visualizzati.addAll(libreria.getLibri());
             int indiceSelezionato = comboOrdinamento.getSelectedIndex();
             Ordinamento strategia = strategie_ordinamento[indiceSelezionato];
             strategia.ordina( (ArrayList<Libro>) libri_visualizzati);

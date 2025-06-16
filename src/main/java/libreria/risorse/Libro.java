@@ -26,6 +26,15 @@ public class Libro  {
     // per caricare libri da file json
     public Libro(){}
 
+    public Libro(Libro altro){
+        this.titolo = altro.getTitolo();
+        this.autore = altro.getAutore();
+        this.codice_ISBN = altro.getCodice_ISBN();
+        this.genere = altro.getGenere();
+        this.valutazione = altro.getValutazione();
+        this.status = altro.getStatus();
+    }
+
     public String getTitolo() {
         return titolo;
     }

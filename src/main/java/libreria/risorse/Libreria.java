@@ -23,7 +23,9 @@ public class Libreria extends Subject implements Aggregato {
 
     private static Libreria instanza;
     private List<Libro> libri ;
-    private Libreria() {};
+    private Libreria() {
+        this.libri = new ArrayList<>();
+    };
 
     public static Libreria getInstance() {
         if (instanza == null) {
@@ -70,14 +72,12 @@ public class Libreria extends Subject implements Aggregato {
     public List<Libro> filtra_status(Stato_della_lettura status) {
         List<Libro> selezionati = new ArrayList<>();
         Iterator<Libro> it = crea_iterator();
-
         Gestore_status g1 = new Gestore_letti();
-        Gestore_in_lettura g2 = new Gestore_in_lettura();
-        Gestore_da_leggere g3 = new Gestore_da_leggere();
+        Gestore_status g2 = new Gestore_in_lettura();
+        Gestore_status g3 = new Gestore_da_leggere();
         g1.setSuccessivo(g2);
         g2.setSuccessivo(g3);
         g1.gestisci(status,selezionati,it);
-
         return selezionati;
     }
 
